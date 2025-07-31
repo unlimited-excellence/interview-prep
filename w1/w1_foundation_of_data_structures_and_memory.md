@@ -123,7 +123,7 @@ The computer memory hierarchy organizes storage systems into a pyramid of levels
 #### The Levels of Memory
 The hierarchy is typically divided into three main categories: inboard memory, outboard storage, and off-line storage.
 
-##### Inboard Memory (Primary Storage) 🧠
+##### Inboard Memory (Primary Storage)
 This refers to all memory that the CPU can access directly without using I/O (input/output) channels. It is the fastest memory in the computer but also the most expensive and has the lowest capacity.
 
 * **Components:** CPU Registers, Cache (L1, L2, L3), and Main Memory (RAM).
@@ -133,7 +133,7 @@ This refers to all memory that the CPU can access directly without using I/O (in
     * **CPU Accessibility:** It is the *only* storage that the CPU can directly read from and write to. Data from slower storage must first be loaded into RAM to be processed.
     * **Addressability:** It is **byte-addressable**, meaning the CPU can access any individual byte of data.
 
-##### Outboard Storage (Secondary Storage) 💾
+##### Outboard Storage (Secondary Storage)
 This refers to storage that is not directly accessible by the CPU and is connected to the computer through I/O controllers. It serves as the main repository for data and programs that are not currently in active use.
 
 * **Components:** Solid-State Drives (SSDs), Hard Disk Drives (HDDs).
@@ -143,7 +143,7 @@ This refers to storage that is not directly accessible by the CPU and is connect
     * **Capacity:** It offers a much larger storage capacity at a lower cost per byte compared to inboard memory.
     * **Addressability:** It is **block-addressable**, meaning data is read and written in fixed-size blocks (e.g., 4 KB), not byte by byte.
 
-##### Off-line Storage (Tertiary Storage) 🗄️
+##### Off-line Storage (Tertiary Storage)
 This is a type of storage that is not under the direct control of the CPU and often requires human or robotic intervention to be mounted and made accessible. It is used for archiving, backups, and transporting large amounts of data.
 
 * **Components:** Magnetic tapes, optical disks (Blu-ray, DVD), and external hard drives or cloud storage services used for archiving.
