@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures & Memory Presentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-color: #1a1a1d;
+            --primary-text: #e0e0e0;
+            --accent-color: #4ecca3;
+            --card-color: #2c2f33;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 1024px;
+            height: 768px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            background-color: var(--bg-color);
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 50px;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            z-index: 0;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 1;
+        }
+
+        .slide h1 {
+            font-size: 3.2em;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .slide h2 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            font-weight: 700;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .slide p {
+            font-size: 1.3em;
+            line-height: 1.7;
+            max-width: 85%;
+            margin-bottom: 25px;
+            font-weight: 300;
+        }
+
+        .slide-concept {
+            margin-top: 25px;
+            font-style: italic;
+            color: #aaa;
+            font-size: 1em;
+            max-width: 75%;
+        }
+
+        .grid-2, .grid-3 {
+            display: grid;
+            width: 100%;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .card {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .card h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+
+        .card .icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .card.pro .icon {
+            color: #2ecc71;
+        }
+
+        .card.con .icon {
+            color: #e74c3c;
+        }
+
+        .visual {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .visual img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .benchmark-chart {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .benchmark-bar {
+            background-color: #34495e;
+            color: white;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: left;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        .bar-vector {
+            background-color: #3498db;
+        }
+
+        .bar-list {
+            background-color: #e74c3c;
+        }
+
+        /* Slide Specifics */
+        #slide1 {
+            background-image: linear-gradient(rgba(26, 26, 29, 0.8), rgba(26, 26, 29, 0.8)), url('https://placehold.co/1024x768/000000/FFFFFF?text=..');
+            background-size: cover;
+        }
+
+        #slide2 .concept-visual {
+            font-size: 8em;
+            color: #f1c40f;
+        }
+
+        #slide2 .concept-image {
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+            background-image: url('https://placehold.co/400x250/34495e/ecf0f1?text=CPU+%26+Memory');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #slide10 .pyramid {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #slide10 .pyramid-level {
+            background-color: var(--card-color);
+            border: 1px solid #444;
+            color: var(--primary-text);
+            padding: 8px 0;
+            margin-bottom: 5px;
+            text-align: center;
+            font-weight: bold;
+            clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+            width: 100%;
+        }
+
+        #slide10 .pyramid-level:nth-child(1) {
+            width: 40%;
+            background-color: #e74c3c;
+        }
+
+        #slide10 .pyramid-level:nth-child(2) {
+            width: 60%;
+            background-color: #e67e22;
+        }
+
+        #slide10 .pyramid-level:nth-child(3) {
+            width: 80%;
+            background-color: #f1c40f;
+        }
+
+        #slide10 .pyramid-level:nth-child(4) {
+            width: 100%;
+            background-color: #2ecc71;
+        }
+
+        #slide26 table {
+            width: 90%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        #slide26 th, #slide26 td {
+            border: 1px solid #444;
+            padding: 12px;
+            font-size: 1.1em;
+        }
+
+        #slide26 th {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        #slide26 .tick {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        #slide26 .cross {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            z-index: 10;
+        }
+
+        .nav-button {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-left: 10px;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.1);
+        }
+
+        .slide-counter {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1em;
+            color: #888;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <!-- SLIDES START -->
+    <div id="slide1" class="slide active">
+        <h1>Data Structures & Memory</h1>
+        <p>Beyond Big O: Understanding the hardware's role in real-world performance.</p>
+        <p class="slide-concept">Your Name | July 31, 2025</p>
+    </div>
+    <div id="slide2" class="slide">
+        <h2>Why Memory Matters</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Theory</h3>
+                <div class="concept-visual">O(n)</div>
+                <p>Algorithm scalability on an abstract machine.</p>
+            </div>
+            <div class="card">
+                <h3>Reality</h3>
+                <div class="concept-image"></div>
+                <p>Code execution speed on physical hardware.</p>
+            </div>
+        </div>
+    </div>
+    <div id="slide3" class="slide">
+        <h2>Arrays: Power of Contiguity</h2>
+        <p>A collection of same-type elements stored in a single, unbroken block of memory.</p>
+        <div class="visual">
+            <img src="https://placehold.co/800x150/2c2f33/4ecca3?text=Base+Addr+%7C+Elem+0+%7C+Elem+1+%7C+Elem+2+%7C+..."
+                 alt="Array Contiguity">
+        </div>
+    </div>
+    <div id="slide4" class="slide">
+        <h2>Static vs. Dynamic Arrays</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Static Array</h3>
+                <p>Size fixed at compile-time. Lives on the fast, limited **Stack**.</p>
+                <img src="https://placehold.co/300x150/2c2f33/e74c3c?text=Fixed+Size+on+Stack" alt="Static Array">
+            </div>
+            <div class="card">
+                <h3>Dynamic Array</h3>
+                <p>Resizable at runtime. Lives on the large, flexible **Heap**.</p>
+                <img src="https://placehold.co/300x150/2c2f33/2ecc71?text=Resizable+on+Heap" alt="Dynamic Array">
+            </div>
+        </div>
+    </div>
+    <div id="slide5" class="slide">
+        <h2>Array: Strengths & Weaknesses</h2>
+        <div class="grid-2">
+            <div class="card pro">
+                <div class="icon">🚀</div>
+                <h3>Fast Indexed Access: O(1)</h3>
+                <p>Instantly calculate any element's address.</p>
+            </div>
+            <div class="card con">
+                <div class="icon">🐌</div>
+                <h3>Slow Middle Insert/Delete: O(n)</h3>
+                <p>Requires shifting all subsequent elements.</p>
+            </div>
+        </div>
+    </div>
+    <div id="slide6" class="slide">
+        <h2>Linked Lists: Flexibility of Pointers</h2>
+        <p>A sequence of nodes scattered in memory, connected by pointers.</p>
+        <div class="visual">
+            <img src="https://placehold.co/800x200/2c2f33/4ecca3?text=Node+(Data%7CNext)+--->+Node+(Data%7CNext)+--->+..."
+                 alt="Linked List Nodes">
+        </div>
+    </div>
+    <div id="slide7" class="slide">
+        <h2>Types of Linked Lists</h2>
+        <div class="grid-3">
+            <div class="card"><h3>Singly Linked</h3>
+                <p>Forward traversal only. Lowest memory overhead.</p></div>
+            <div class="card"><h3>Doubly Linked</h3>
+                <p>Bidirectional traversal. Higher memory use.</p></div>
+            <div class="card"><h3>Circular</h3>
+                <p>Last node points to the first. Forms a loop.</p></div>
+        </div>
+    </div>
+    <div id="slide8" class="slide">
+        <h2>Linked List: Strengths & Weaknesses</h2>
+        <div class="grid-2">
+            <div class="card pro">
+                <div class="icon">✨</div>
+                <h3>Fast Insert/Delete: O(1)</h3>
+                <p>Simply re-route pointers. No shifting needed.</p>
+            </div>
+            <div class="card con">
+                <div class="icon">🐢</div>
+                <h3>Slow Indexed Access: O(n)</h3>
+                <p>Must traverse from the head to find an element.</p>
+            </div>
+        </div>
+    </div>
+    <div id="slide9" class="slide">
+        <h2>Pointers & Memory Risks</h2>
+        <div class="grid-2">
+            <div class="card con">
+                <div class="icon">💧</div>
+                <h3>Memory Leaks</h3>
+                <p>Allocated memory becomes unreachable and can't be freed.</p>
+            </div>
+            <div class="card con">
+                <div class="icon">🔗</div>
+                <h3>Dangling Pointers</h3>
+                <p>A pointer that references a memory location that has been freed.</p>
+            </div>
+        </div>
+    </div>
+    <div id="slide10" class="slide">
+        <h2>The Memory Hierarchy</h2>
+        <p>A pyramid balancing speed, cost, and capacity to optimize data access.</p>
+        <div class="pyramid">
+            <div class="pyramid-level">CPU Registers</div>
+            <div class="pyramid-level">L1/L2/L3 Cache</div>
+            <div class="pyramid-level">Main Memory (RAM)</div>
+            <div class="pyramid-level">SSD / HDD / Cloud</div>
+        </div>
+    </div>
+    <div id="slide11" class="slide">
+        <h2>Inboard Memory: CPU's Playground</h2>
+        <p>Memory the CPU accesses directly. It's extremely fast but **volatile** (contents lost on power-off).</p>
+        <div class="grid-3">
+            <div class="card"><h3>Registers</h3>
+                <p>Fastest.</p></div>
+            <div class="card"><h3>Cache</h3>
+                <p>Very Fast.</p></div>
+            <div class="card"><h3>RAM</h3>
+                <p>Fast.</p></div>
+        </div>
+    </div>
+    <div id="slide12" class="slide">
+        <h2>Outboard & Off-line Storage</h2>
+        <p>Slower, larger, and **non-volatile** storage for long-term data persistence.</p>
+        <div class="grid-2">
+            <div class="card"><h3>Outboard (Secondary)</h3>
+                <p>SSDs, HDDs. For files and OS.</p></div>
+            <div class="card"><h3>Off-line (Tertiary)</h3>
+                <p>Tapes, Disks. For archives and backups.</p></div>
+        </div>
+    </div>
+    <div id="slide13" class="slide">
+        <h2>The Principle of Locality</h2>
+        <p>Programs access memory in predictable ways, which caching systems exploit for speed.</p>
+        <div class="grid-2">
+            <div class="card"><h3>Temporal Locality</h3>
+                <p>Data accessed once will likely be accessed again soon.</p></div>
+            <div class="card"><h3>Spatial Locality</h3>
+                <p>Data accessed will likely be followed by access to nearby data.</p></div>
+        </div>
+    </div>
+    <div id="slide14" class="slide">
+        <h2>Cache Performance: Arrays Win!</h2>
+        <p>Array's contiguous layout perfectly matches **spatial locality**, leading to a cascade of fast cache
+            hits.</p>
+        <div class="visual">
+            <img src="https://placehold.co/800x250/2c2f33/2ecc71?text=Cache+Hit+%7C+Cache+Hit+%7C+Cache+Hit+%7C+..."
+                 alt="Array Cache Hits">
+        </div>
+    </div>
+    <div id="slide15" class="slide">
+        <h2>Cache Performance: Linked Lists Struggle</h2>
+        <p>Scattered nodes break spatial locality, causing a series of slow **cache misses** and "pointer chasing".</p>
+        <div class="visual">
+            <img src="https://placehold.co/800x250/2c2f33/e74c3c?text=Cache+Miss+-->+Cache+Miss+-->+Cache+Miss"
+                 alt="Linked List Cache Misses">
+        </div>
+    </div>
+    <div id="slide16" class="slide">
+        <h2>Empirical Proof: Benchmarks</h2>
+        <p>Let's compare `std::vector` (array) vs. `std::list` (linked list) in C++ to see the real-world impact.</p>
+        <div class="visual">
+            <img src="https://placehold.co/400x200/2c2f33/4ecca3?text=Vector+vs+List+Benchmarks" alt="Benchmark Intro">
+        </div>
+    </div>
+    <div id="slide17" class="slide">
+        <h2>Benchmark 1: Sequential Traversal</h2>
+        <p>Iterating through 10 million integers. The vector's cache-friendliness makes it ~9x faster.</p>
+        <div class="benchmark-chart">
+            <div class="benchmark-bar bar-vector" style="width: 11%;">Vector: 12.51 ms</div>
+            <div class="benchmark-bar bar-list" style="width: 100%;">List: 110.84 ms</div>
+        </div>
+    </div>
+    <div id="slide18" class="slide">
+        <h2>Benchmark 2: Random Access</h2>
+        <p>Accessing 100k random elements. The vector's O(1) access is >3,600x faster than the list's O(n)
+            traversal.</p>
+        <div class="benchmark-chart">
+            <div class="benchmark-bar bar-vector" style="width: 1%;">Vector: 2.15 ms</div>
+            <div class="benchmark-bar bar-list" style="width: 100%;">List: 7854.21 ms</div>
+        </div>
+    </div>
+    <div id="slide19" class="slide">
+        <h2>Benchmark 3: Insertion at Front</h2>
+        <p>Inserting 100k elements at the front. The list's O(1) insertion is >400x faster than the vector's O(n)
+            shift.</p>
+        <div class="benchmark-chart">
+            <div class="benchmark-bar bar-vector" style="width: 100%;">Vector: 789.93 ms</div>
+            <div class="benchmark-bar bar-list" style="width: 2.5%;">List: 1.95 ms</div>
+        </div>
+    </div>
+    <div id="slide20" class="slide">
+        <h2>Theory in Practice: Algorithmic Patterns</h2>
+        <p>Using this knowledge to build efficient algorithms for real problems.</p>
+        <div class="grid-3">
+            <div class="card">
+                <div class="icon">⚖️</div>
+                Time-Space Tradeoff
+            </div>
+            <div class="card">
+                <div class="icon">↔️</div>
+                Two-Pointer Technique
+            </div>
+            <div class="card">
+                <div class="icon">🧠</div>
+                Clever Algorithms
+            </div>
+        </div>
+    </div>
+    <div id="slide21" class="slide">
+        <h2>Pattern: Time-Space Trade-off</h2>
+        <p>Using a **Hash Map** to trade O(n) space for O(n) time, avoiding a slow O(n²) brute-force solution.</p>
+        <div class="visual"><p>Example: Two Sum, Contains Duplicate</p></div>
+    </div>
+    <div id="slide22" class="slide">
+        <h2>Pattern: Two-Pointer Technique</h2>
+        <p>Using two pointers to modify an array **in-place** with O(1) space complexity.</p>
+        <div class="visual"><p>Example: Remove Duplicates from Sorted Array</p></div>
+    </div>
+    <div id="slide23" class="slide">
+        <h2>Pattern: Pointer Juggling</h2>
+        <p>Carefully reassigning pointers to manipulate linked list structures.</p>
+        <div class="visual"><p>Example: Reverse Linked List, Merge Two Sorted Lists</p></div>
+    </div>
+    <div id="slide24" class="slide">
+        <h2>Pattern: Floyd's Cycle-Finding</h2>
+        <p>The "Tortoise and Hare" algorithm. A slow and fast pointer meet if a cycle exists. O(n) time, O(1) space.</p>
+        <div class="visual"><img src="https://placehold.co/600x200/2c2f33/4ecca3?text=Slow+-->+<--+Fast"
+                                 alt="Tortoise and Hare"></div>
+    </div>
+    <div id="slide25" class="slide">
+        <h2>Advanced: Heaps for K-way Problems</h2>
+        <p>Using a **Min-Heap** to efficiently track the smallest element across multiple sorted lists.</p>
+        <div class="visual"><p>Example: Merge k Sorted Lists</p></div>
+    </div>
+    <div id="slide26" class="slide">
+        <h2>Conclusion: Key Trade-offs</h2>
+        <table>
+            <tr>
+                <th>Feature</th>
+                <th>Array (`std::vector`)</th>
+                <th>Linked List</th>
+            </tr>
+            <tr>
+                <td>Memory Layout</td>
+                <td class="tick">Contiguous</td>
+                <td class="cross">Scattered</td>
+            </tr>
+            <tr>
+                <td>Indexed Access</td>
+                <td class="tick">O(1)</td>
+                <td class="cross">O(n)</td>
+            </tr>
+            <tr>
+                <td>Middle Insert/Delete</td>
+                <td class="cross">O(n)</td>
+                <td class="tick">O(1)</td>
+            </tr>
+            <tr>
+                <td>Cache Performance</td>
+                <td class="tick">Excellent</td>
+                <td class="cross">Poor</td>
+            </tr>
+        </table>
+    </div>
+    <div id="slide27" class="slide">
+        <h2>Further Reading</h2>
+        <div class="grid-2">
+            <div class="card"><h3>Books</h3>
+                <p><i>Computer Systems: A Programmer's Perspective</i> and <i>Introduction to Algorithms (CLRS)</i>.</p>
+            </div>
+            <div class="card"><h3>Online</h3>
+                <p>GeeksforGeeks, USFCA Visualizations, and other interactive learning platforms.</p></div>
+        </div>
+    </div>
+    <div id="slide28" class="slide">
+        <h2>Recommended Practice</h2>
+        <p>Solidify your understanding by solving problems on platforms like LeetCode.</p>
+        <div class="grid-3">
+            <div class="card"><h3>Easy</h3>
+                <p>Two Sum, Reverse Linked List, Contains Duplicate.</p></div>
+            <div class="card"><h3>Medium</h3>
+                <p>Linked List Cycle II, Remove Duplicates II.</p></div>
+            <div class="card"><h3>Hard</h3>
+                <p>Merge k Sorted Lists, Smallest Range.</p></div>
+        </div>
+    </div>
+    <div id="slide29" class="slide">
+        <h2>Interview Spotlight</h2>
+        <p>Be ready to explain the "why" behind your choices.</p>
+        <div class="card">
+            <p>"Why are arrays faster for traversal?" → **Cache Locality.**</p>
+            <p>"When is a list better?" → **Frequent insertions/deletions, pointer stability.**</p>
+        </div>
+    </div>
+    <div id="slide30" class="slide">
+        <h2>Foundational Q&A</h2>
+        <p>Test your core understanding.</p>
+        <div class="card">
+            <p>What is the difference between stack and heap?</p>
+            <p>What is a dangling pointer vs. a memory leak?</p>
+            <p>Why is indexed access in arrays O(1)?</p>
+        </div>
+    </div>
+    <div id="slide31" class="slide">
+        <h2>Knowledge Check Quiz</h2>
+        <p>Which is better for an 'undo' feature and why? Which causes a cache miss?</p>
+        <div class="visual">
+            <img src="https://placehold.co/400x200/2c2f33/4ecca3?text=Quiz+Time!" alt="Quiz">
+        </div>
+    </div>
+    <div id="slide32" class="slide">
+        <h1>Thank You</h1>
+        <p>Questions?</p>
+    </div>
+    <!-- SLIDES END -->
+
+    <div class="slide-counter"></div>
+    <div class="nav-buttons">
+        <button id="prevBtn" class="nav-button">‹ Prev</button>
+        <button id="nextBtn" class="nav-button">Next ›</button>
+    </div>
+</div>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const slideCounter = document.querySelector('.slide-counter');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+        slideCounter.textContent = `${index + 1} / ${slides.length}`;
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', nextSlide);
+    document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            prevSlide();
+        }
+    });
+
+    showSlide(currentSlide);
+</script>
+</body>
+</html>
