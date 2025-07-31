@@ -1,0 +1,14 @@
+Setting up benchmark data with 10000000 elements...
+Setup complete. Running benchmarks...
+
+--- Benchmark 1: Sequential Traversal ---
+std::vector traversal time: 172.83 ms
+std::list traversal time:   224.26 ms
+
+--- Benchmark 2: Random Access ---
+std::vector random access time: 10.61 ms
+std::list random access time:   1653161.46 ms
+
+--- Benchmark 3: Insertion at Front ---
+std::vector insertion time: 380.88 ms
+std::list insertion time:   7.91 ms
